@@ -1,35 +1,18 @@
 /**
  * This is a simple debugger written in C.
- * 
+ *
  * Author: Satvik Sethia
  */
 
 #include <stdlib.h>
 #include <unistd.h>
+#include <string.h>
+#include <stdio.h>
 #include <sys/types.h>
+#include <sys/wait.h>
 #include <sys/ptrace.h>
 #include "linenoise/linenoise.h"
-
-void handleCommand(char *command) {
-
-}
-
-void debug(int pid) {
-  int status;
-  waitpid(pid, &status, 0);
-
-  /* Load history from file. The history file is just a plain text file
-    * where entries are separated by newlines. */
-  linenoiseHistoryLoad("history.txt"); // Load the history at startup
-  
-  char* command;
-  while ((command = linenoise("dbg> ")) != NULL) {
-      handleCommand(command);
-      linenoiseHistoryAdd(command);
-      linenoiseHistorySave("history.txt"); /* Save the history on disk. */
-      free(command);
-  }
-}
+#include "breakpoint.h"
 
 int main (int argc, char *argv[]) {
   // Check if name of program to debug specified
@@ -48,4 +31,6 @@ int main (int argc, char *argv[]) {
   } else {
     debug(pid);
   }
+
+  return 0;
 }
